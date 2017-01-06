@@ -1,3 +1,5 @@
+// ==========================Frameworks=================================
+
 var express = require('express');
 
 var app = express();
@@ -20,8 +22,10 @@ app.use(bodyparser.urlencoded({
 
 app.use(bodyparser.json());
 
+// ======================================================================
 
-app.post("/addUser", function(req, res) {
+
+app.post("/addUser", function(req, res) { // Append user object.
 
 	var data = fs.readFileSync("users.json");
 
@@ -42,7 +46,7 @@ app.post("/addUser", function(req, res) {
 });
 
 
-app.get("/users", function(req, res) {
+app.get("/users", function(req, res) { // View full list of user objects.
 
 	var data = fs.readFileSync("users.json");
 
@@ -51,7 +55,7 @@ app.get("/users", function(req, res) {
 });
 
 
-app.delete("/deleteUser/:name", function(req, res) {
+app.delete("/deleteUser/:name", function(req, res) {  // Delete user.
 
 	var userName = req.params.name;
 
@@ -59,13 +63,13 @@ app.delete("/deleteUser/:name", function(req, res) {
 
 	data = JSON.parse(data);
 
-	var update = data.filter(function(item) {
+	var update = data.filter(function(item) {  // Get all users excluding the one to be deleted.
 
 		return (item.name != userName);
 
 	});
 
-	if(data.length==update.length) {
+	if(data.length==update.length) { // If original data and excluded list data are same length, user is not present in the file.
 
 		console.log("User not present in database");
 
@@ -73,7 +77,7 @@ app.delete("/deleteUser/:name", function(req, res) {
 
 	}
 
-	else {
+	else {  // Overwrite the file with the excluded list.
 
 		update = JSON.stringify(update);
 
@@ -90,7 +94,7 @@ app.delete("/deleteUser/:name", function(req, res) {
 });
 
 
-app.get("/getUser/:name", function(req, res) {
+app.get("/getUser/:name", function(req, res) { // Get a user record.
 
 	var userName = req.params.name;
 
@@ -98,7 +102,7 @@ app.get("/getUser/:name", function(req, res) {
 
 	data = JSON.parse(data);
 
-	var update = data.filter(function(item) {
+	var update = data.filter(function(item) { // Get the searched object.
 
 		return (item.name == userName);
 
@@ -106,13 +110,13 @@ app.get("/getUser/:name", function(req, res) {
 
 	update = JSON.stringify(update);
 
-	if(update.length>2) {
+	if(update.length>2) { // User is present.
 
 		res.end(update);
 
 	}
 
-	else {
+	else { // User is not present in the file.
 
 		res.end("User not present in the database");
 				
@@ -123,13 +127,13 @@ app.get("/getUser/:name", function(req, res) {
 });
 
 
-app.put("/editUser/:name/:age", function(req, res) {
+app.put("/editUser/:name/:age", function(req, res) { // Edit a user's age.
 
 	var userName = req.params.name;
 
 	var age = req.params.age;
 
-	if(!isNaN(age)) {
+	if(!isNaN(age) && age > 0) { // Check if age is a valid number.
 
 		var data = fs.readFileSync("users.json");
 
@@ -141,17 +145,17 @@ app.put("/editUser/:name/:age", function(req, res) {
 
 		});
 
-		if(userEdit.length>0) {
+		if(userEdit.length>0) {  // User is present.
 
-			var truncated = data.filter(function(item) {
+			var truncated = data.filter(function(item) { // Truncate the searched user from list.
 
 				return (item.name != userName);
 
 			});
 
-			userEdit[0].age = age;
+			userEdit[0].age = age; // Edit age property.
 
-			truncated.push(userEdit[0]);
+			truncated.push(userEdit[0]); // Push edited user record in to the truncated records array.
 
 			truncated = JSON.stringify(truncated);
 
@@ -174,7 +178,7 @@ app.put("/editUser/:name/:age", function(req, res) {
 
 	}
 
-	else {
+	else { // Age is invalid.
 
 		console.log("Invalid age");
 
@@ -185,7 +189,7 @@ app.put("/editUser/:name/:age", function(req, res) {
 });
 
  
-var server = app.listen(3000, function () {
+var server = app.listen(3000, function () { // Start server.
   
   var port = server.address().port
   

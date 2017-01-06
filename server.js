@@ -1,6 +1,9 @@
 var express = require('express');
+
 var app = express();
+
 var fs = require("fs");
+
 var bodyparser = require("body-parser");
 
 var initial;
@@ -150,6 +153,7 @@ app.get("/getUser/:name", function(req, res) {
 		if(err) {
 
 			console.log("Error in reading file");
+			
 			res.end("Error in reading file");
 
 		}
@@ -175,6 +179,7 @@ app.get("/getUser/:name", function(req, res) {
 			else {
 
 				res.end("User not present in the database");
+				
 				console.log("User not present in the database");
 
 			}
@@ -252,6 +257,7 @@ app.put("/editUser/:name/:age", function(req, res) {
 				else {
 
 					res.end("User not present in the database");
+					
 					console.log("User not present in the database");
 
 				}
@@ -275,7 +281,9 @@ app.put("/editUser/:name/:age", function(req, res) {
 var server = app.listen(3000, function () {
 
   var host = server.address().address
+  
   var port = server.address().port
+  
   console.log("Server listening at port : %s", port)
 
 })
